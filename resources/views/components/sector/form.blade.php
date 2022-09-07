@@ -1,0 +1,16 @@
+<div class="box box-info padding-1">
+    <div class="box-body">
+        
+        <div class="form-group">
+            {{ Form::label('name') }}
+            {{ Form::text('name', $sector->name, ['class' => 'form-control' . ($errors->has('name') ? ' is-invalid' : ''), 'placeholder' => 'Name']) }}
+            {!! $errors->first('name', '<div class="invalid-feedback">:message</div>') !!}
+        </div>
+
+    </div>
+    <div class="box-footer mt20">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</div>
+
+{!! Form::select($id_days, $days, 1, [$schedule->id_day=>$id_days]) !!}

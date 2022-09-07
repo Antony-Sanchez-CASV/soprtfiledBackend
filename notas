@@ -1,0 +1,98 @@
+quiero cambiar las horas por un id 
+osea 7:00 es 1 
+y 22:00 es 12 
+x ejemplo
+//trate de hacer un areglo para tener 
+{{$horas= new array()}}
+           {{
+                for($i=7; $i<=22; $i++){
+                    $horas='$i:00:00';
+                }
+}}
+toca terminar de vincular los horarios a los cursos
+-------------
+ejemplo 
+use App\Article;
+class ArticleController extends Controller
+{
+ public function index()
+ {
+ return Article::all();
+ }
+ public function show($id)
+ {
+ return Article::find($id);
+ }
+ public function store(Request $request)
+ {
+ return Article::create($request->all());
+ }
+ public function update(Request $request, $id)
+ {
+ $article = Article::findOrFail($id);
+ $article->update($request->all());
+ return $article;
+ }
+ public function delete(Request $request, $id)
+ {
+ $article = Article::findOrFail($id);
+ $article->delete();
+ return 204;
+ }
+}
+Route::get('articles', 'ArticleController@index');
+Route::get('articles/{id}', 'ArticleController@show');
+Route::post('articles', 'ArticleController@store');
+Route::put('articles/{id}', 'ArticleController@update');
+Route::delete('articles/{id}', 'ArticleController@delete')
+----------
+Pues lo unico malo es tu etiqueta form:
+
+{{Form::open(array('action'=>array('locatorio.destroy', $row->idLocatario), 'method'=>'delete')) }}
+
+debe de estar de la siguiente forma:
+
+{{Form::open(['route'=>['locatorio.destroy', $row->idLocatario], 'method'=>'delete']) }}
+Espero te sirva suerte.
+--------------------
+
+
+
+
+//https://dev.to/olodocoder/laravel-api-series-laravel-sanctum-setup-sign-up-login-and-logout-3kb
+//https://diarioprogramador.com/laravel-sanctum-crear-api-restful/
+//https://notasweb.me/entrada/crear-un-api-rest-en-laravel#:~:text=Creaci%C3%B3n%20de%20una%20API%20REST%20con%20Laravel%20El,Necesitaras%20el%20manejador%20de%20paquetes%20de%20PHP%2C%20Composer.
+        try{
+            $validate=$request->validate([
+                'email' => ['required', 'string', 'email', 'max:255'],
+                'password' => ['required', 'string'],
+            ]);
+            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])){
+                return response()->json([
+                    'token'=>$request->user()->createToken('remember_token')->plainTextToken,
+                    'message'=>'Success'
+                ], 200);
+            }
+        }catch (ValidationException $exception) {
+            return response()->json([
+                'status' => 'error',
+                'msg'    => 'Error',
+                'errors' => $exception->errors(),
+            ], 422);
+        }
+        
+        return response()->json([
+            'message'=>'Error Correo o contraseña incorrectos'
+        ], 200);
+        /*
+        $user=User::where('email',$request->email)->first();
+        if(!user || !Hash::check($request->password, $user->password)){
+            throw ValidationException::withMessages([
+                'msg'=>['Correo o contraseña incorrectos'],
+            ]);
+        }
+        $token= $user->createToken($request->email)->plainTextToken;
+        return response()->json([
+            'res'=>true,
+            'token'=>$token
+        ], 200, );*/
